@@ -10,12 +10,11 @@ using System.Windows.Forms;
 
 namespace MoffEngine
 {
-    public partial class Form1 : Form
+    public partial class Screen : Form
     {
-        public Form1()
+        public Screen()
         {
             InitializeComponent();
-            Form
         }
     }
 }
