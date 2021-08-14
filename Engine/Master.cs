@@ -40,8 +40,6 @@ namespace MoffEngine.Engine
             graphics = CreateGraphics();
             mousevPixelCoords = new Point();
             mouseButtonState = new MouseButtonState(false, false);
-
-            GameProc.Init();
             runTimer.Start();
         }
 
@@ -89,8 +87,10 @@ namespace MoffEngine.Engine
 
         private void Master_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.X < 0 || e.X > (screenPixelWidth - 1) || e.Y < 0 || e.Y > (screenPixelWidth - 1))
+                return;
             Point nextP = new Point(e.X / vPixelWidth, e.Y / vPixelWidth);
-            GameProc.MouseMove(mousevPixelCoords, nextP);
+            GameProc.MouseMove(mousevPixelCoords, nextP, mouseButtonState);
             mousevPixelCoords = nextP;
         }
 
@@ -110,8 +110,12 @@ namespace MoffEngine.Engine
         private void RunTick(object sender, EventArgs e)
         {
             runTimer.Stop();
-            Tick++;
+            if (Tick == 0)
+            {
+                GameProc.Init();
+            }
             GameProc.GameTick(Tick);
+            Tick++;
             runTimer.Start();
         }
 
@@ -149,6 +153,13 @@ namespace MoffEngine.Engine
                 R = redVal;
                 G = grnVal;
                 B = bluVal;
+            }
+
+            public void SetColor(Color newcolor)
+            {
+                R = newcolor.R;
+                G = newcolor.G;
+                B = newcolor.B;
             }
         }
     }
