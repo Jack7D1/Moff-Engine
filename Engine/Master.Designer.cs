@@ -1,4 +1,4 @@
-﻿namespace MoffEngine
+﻿namespace MoffEngine.Engine
 {
     partial class Master
     {
@@ -31,18 +31,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Master));
             this.SuspendLayout();
             // 
-            // Graphic
+            // Master
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
-            this.ClientSize = new System.Drawing.Size(496, 473);
+            this.ClientSize = new System.Drawing.Size(512, 512);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(512, 512);
-            this.MinimumSize = new System.Drawing.Size(512, 512);
-            this.Name = "Graphic";
+            this.MaximumSize = new System.Drawing.Size(512 + (512 - 496), 512 + (512 - 473));
+            this.MinimumSize = new System.Drawing.Size(512 + (512 - 496), 512 + (512 - 473));
+            this.Name = "Master";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Moth";
             this.ResumeLayout(false);
