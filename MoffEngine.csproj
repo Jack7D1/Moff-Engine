@@ -77,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\Graphic.cs" />
     <Compile Include="GameData\GameProc.cs" />
     <Compile Include="Engine\Master.cs">
       <SubType>Form</SubType>
