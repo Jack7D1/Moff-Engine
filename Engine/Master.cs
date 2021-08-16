@@ -49,12 +49,14 @@ namespace MoffEngine.Engine
             //Start Engine
             if (GameProc.desiredTPS > 0)
             {
+                
                 runTimer.Interval = 1000 / GameProc.desiredTPS;
+                
             }
             else
             {
                 runTimer.Interval = 1;
-                Tick = -1;
+               Tick = -1;
             }
             runTimer.Start();
         }
@@ -139,10 +141,7 @@ namespace MoffEngine.Engine
                     return;
                 }
             }
-            else
-            {
-                GameProc.GameTick(Tick);
-            }
+            GameProc.GameTick(Tick);
             Tick++;
             runTimer.Start();
         }
@@ -158,7 +157,6 @@ namespace MoffEngine.Engine
             }
         }
 
-        //Virtual Pixel, largely a concept made to decrease the resolution of a high resolution monitor.
         public class VPixel
         {
             public byte R, G, B;
