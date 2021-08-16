@@ -7,17 +7,13 @@ namespace MoffEngine.Engine
     public partial class Master : Form
     {
         //Width screen in vPixels
-        public const int screenvPixel = screenPixelWidth / vPixelWidth;
+        public const int screenVPixelWidth = screenPixelWidth / vPixelWidth;
 
         public static readonly Random rand = new Random((int)DateTime.Now.Ticks);
 
         public MouseButtonState mouseButtonState;
 
         public Point mousevPixelCoords;
-
-        private const int maxTPS = 60;
-
-        private const int milisPerTick = 1000 / maxTPS;
 
         //Width of screen in pixels
         private const int screenPixelWidth = 512;
@@ -26,20 +22,33 @@ namespace MoffEngine.Engine
         private const int vPixelWidth = screenPixelWidth / GameProc.desiredvPixelRes;
 
         private static Graphics graphics;
-        private readonly Timer runTimer = new Timer();
+        private readonly Timer runTimer;
 
         private Master()
         {
-            runTimer.Tick += new EventHandler(RunTick);
-            runTimer.Interval = milisPerTick;
             InitializeComponent();
 
             ClientSize = new Size(screenPixelWidth, screenPixelWidth);
             MaximumSize = new Size(screenPixelWidth + 16, screenPixelWidth + 39);
             MinimumSize = new Size(screenPixelWidth + 16, screenPixelWidth + 39); //Resize bounds of window to take into account margins and actions bar to get the PERFECT SQUARE.
+            Text = GameProc.desiredWindowName;
+            BackColor = GameProc.desiredBGColor;
             graphics = CreateGraphics();
             mousevPixelCoords = new Point();
             mouseButtonState = new MouseButtonState(false, false);
+            runTimer = new Timer();
+            runTimer.Tick += new EventHandler(RunTick);
+            if (GameProc.desiredTPS > 0)
+            {
+                
+                runTimer.Interval = 1000 / GameProc.desiredTPS;
+                
+            }
+            else
+            {
+                runTimer.Interval = 1;
+               Tick = -1;
+            }
             runTimer.Start();
         }
 
@@ -48,13 +57,13 @@ namespace MoffEngine.Engine
         //Pass a 2D VPixel array of the proper dimensions (vPixelScreenWidth x vPixelScreenWidth) to this function. Returns true if screen updated successfully, false otherwise.
         public static bool UpdateScreen(VPixel[,] newFrame)
         {
-            if (newFrame.GetLength(0) != screenvPixel || newFrame.GetLength(1) != screenvPixel)
+            if (newFrame.GetLength(0) != screenVPixelWidth || newFrame.GetLength(1) != screenVPixelWidth)
                 return false;
 
             SolidBrush brush = new SolidBrush(Color.Transparent);
 
-            for (int y = 0; y < screenvPixel; y++)
-                for (int x = 0; x < screenvPixel; x++)
+            for (int y = 0; y < screenVPixelWidth; y++)
+                for (int x = 0; x < screenVPixelWidth; x++)
                 {
                     brush.Color = Color.FromArgb(newFrame[x, y].R, newFrame[x, y].G, newFrame[x, y].B);
                     graphics.FillRectangle(brush, vPixelWidth * x, vPixelWidth * y, vPixelWidth, vPixelWidth);
@@ -110,9 +119,14 @@ namespace MoffEngine.Engine
         private void RunTick(object sender, EventArgs e)
         {
             runTimer.Stop();
-            if (Tick == 0)
+            if (Tick <= 0)
             {
                 GameProc.Init();
+                if (Tick < 0)
+                {
+                    runTimer.Dispose();
+                    return;
+                }
             }
             GameProc.GameTick(Tick);
             Tick++;
@@ -136,9 +150,12 @@ namespace MoffEngine.Engine
 
             public VPixel(byte redVal = 0, byte grnVal = 0, byte bluVal = 0)
             {
-                R = redVal;
-                G = grnVal;
-                B = bluVal;
+                SetRGB(redVal, grnVal, bluVal);
+            }
+
+            public VPixel(Color color)
+            {
+                SetColor(color);
             }
 
             public void GetRGB(out byte redVal, out byte grnVal, out byte bluVal)
@@ -148,18 +165,18 @@ namespace MoffEngine.Engine
                 bluVal = B;
             }
 
-            public void SetRGB(byte redVal, byte grnVal, byte bluVal)
-            {
-                R = redVal;
-                G = grnVal;
-                B = bluVal;
-            }
-
             public void SetColor(Color newcolor)
             {
                 R = newcolor.R;
                 G = newcolor.G;
                 B = newcolor.B;
+            }
+
+            public void SetRGB(byte redVal, byte grnVal, byte bluVal)
+            {
+                R = redVal;
+                G = grnVal;
+                B = bluVal;
             }
         }
     }
