@@ -6,42 +6,28 @@ namespace MoffEngine
 {
     internal static class GameProc
     {
-        //Change this to set desired screen size, the engine is NOT meant for values over 32!!
         public const int desiredvPixelRes = 16;
 
-        //Set this to your desired window name.
         public const string desiredWindowName = "Moth Paint";
 
-        //Set this to your desired BG color
         public static readonly Color desiredBGColor = Color.Black;
 
-        //Set this to your desired ticks per second, less than or equal to 24 reccomended to prevent window from hanging, set to 0 if GameTick is not utilized, to conserve system resources.
-        public static readonly int desiredTPS = 0; //REQUIRED DECLARATION
-
-        //REQUIRED DECLARATION
+        public static readonly int desiredTPS = 24;
 
         private static readonly List<Color> colors = new List<Color> { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet, Color.White };
 
-        //REQUIRED DECLARATION
-        //Example vPixel matrix when vPixelScreenWidth = 4: This would be a small white square on a black background.
-        // [[ {0,0,0},{0,0,0},      {0,0,0},      {0,0,0}]
-        //  [ {0,0,0},{255,255,255},{255,255,255},{0,0,0}]
-        //  [ {0,0,0},{255,255,255},{255,255,255},{0,0,0}]
-        //  [ {0,0,0},{0,0,0},      {0,0,0},      {0,0,0}]]
-        //vPixel table of RGB values that is plotted to the screen. Call Engine.UpdateScreen with this buffer when ready to make a change to the screen.
         private static readonly VPixel[,] frameBuffer = new VPixel[screenVPixelWidth, screenVPixelWidth];
 
         private static int colorIndex = 0;
 
-        //REQUIRED DECLARATION
         private static bool fillInProgress = false;
 
-        public static void GameTick(long currentTick) //REQUIRED DECLARATION
+        public static void GameTick(long currentTick)
         {
             fillInProgress = false;
         }
 
-        public static void Init() //REQUIRED DECLARATION
+        public static void Init()
         {
             for (int y = 0; y < screenVPixelWidth; y++)
                 for (int x = 0; x < screenVPixelWidth; x++)
@@ -55,7 +41,7 @@ namespace MoffEngine
             UpdateScreen(frameBuffer);
         }
 
-        public static void MouseDown(Point selectedVPixel, MouseButtonState oldMouseState, bool lDown, bool rDown) //REQUIRED DECLARATION
+        public static void MouseDown(Point selectedVPixel, MouseButtonState oldMouseState, bool lDown, bool rDown)
         {
             if (lDown && !fillInProgress)
             {
@@ -72,7 +58,7 @@ namespace MoffEngine
             }
         }
 
-        public static void MouseMove(Point oldSelectedVPixel, Point newSelectedVPixel, MouseButtonState mouseState) //REQUIRED DECLARATION
+        public static void MouseMove(Point oldSelectedVPixel, Point newSelectedVPixel, MouseButtonState mouseState)
         {
             if (mouseState.L && oldSelectedVPixel != newSelectedVPixel && !(newSelectedVPixel.X == 0 && newSelectedVPixel.Y == 0))
             {
@@ -80,7 +66,7 @@ namespace MoffEngine
             }
         }
 
-        public static void MouseUp(Point selectedVPixel, MouseButtonState oldMouseState, bool lUp, bool rUp) //REQUIRED DECLARATION
+        public static void MouseUp(Point selectedVPixel, MouseButtonState oldMouseState, bool lUp, bool rUp)
         {
         }
 

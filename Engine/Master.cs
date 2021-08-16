@@ -141,7 +141,10 @@ namespace MoffEngine.Engine
                     return;
                 }
             }
-            GameProc.GameTick(Tick);
+            else
+            {
+                GameProc.GameTick(Tick);
+            }
             Tick++;
             runTimer.Start();
         }
@@ -156,7 +159,7 @@ namespace MoffEngine.Engine
                 R = r;
             }
         }
-
+        //Virtual Pixel, largely a concept made to decrease the resolution of a high resolution monitor.
         public class VPixel
         {
             public byte R, G, B;
