@@ -11,7 +11,7 @@ namespace MoffEngine
 
         //REQUIRED DECLARATION
         //Set this to your desired window name.
-        public const string desiredWindowName = "Moth Paint";
+        public const string desiredWindowName = "Moth Engine";
 
         //REQUIRED DECLARATION
         //Set this to your desired BG color.
@@ -19,7 +19,7 @@ namespace MoffEngine
 
         //REQUIRED DECLARATION
         //Set this to your desired ticks per second, less than or equal to 24 reccomended to prevent window from hanging, set to 0 if GameTick is not utilized, to conserve system resources.
-        public static readonly int desiredTPS = 24;
+        public static readonly int desiredTPS = 0;
 
         //REQUIRED DECLARATION
         //Example vPixel matrix when desiredvPixelRes = 4: This would be a small white square on a black background.
