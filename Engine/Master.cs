@@ -21,6 +21,7 @@ namespace MoffEngine.Engine
         //Width of vPixel in screen pixels
         private const int vPixelWidth = screenPixelWidth / GameProc.desiredvPixelRes;
 
+        private static VPixel[,] frameBuffer = new VPixel[screenVPixelWidth, screenVPixelWidth];
         private static Graphics graphics;
         private readonly Timer runTimer;
 
@@ -28,16 +29,24 @@ namespace MoffEngine.Engine
         {
             InitializeComponent();
 
+            //Apply settings
             ClientSize = new Size(screenPixelWidth, screenPixelWidth);
             MaximumSize = new Size(screenPixelWidth + 16, screenPixelWidth + 39);
             MinimumSize = new Size(screenPixelWidth + 16, screenPixelWidth + 39); //Resize bounds of window to take into account margins and actions bar to get the PERFECT SQUARE.
             Text = GameProc.desiredWindowName;
             BackColor = GameProc.desiredBGColor;
+
+            //Initialize systems
             graphics = CreateGraphics();
+            for (int y = 0; y < screenVPixelWidth; y++)
+                for (int x = 0; x < screenVPixelWidth; x++)
+                    frameBuffer[x, y] = new VPixel();
             mousevPixelCoords = new Point();
             mouseButtonState = new MouseButtonState(false, false);
             runTimer = new Timer();
             runTimer.Tick += new EventHandler(RunTick);
+
+            //Start Engine
             if (GameProc.desiredTPS > 0)
             {
                 runTimer.Interval = 1000 / GameProc.desiredTPS;
@@ -63,11 +72,15 @@ namespace MoffEngine.Engine
             for (int y = 0; y < screenVPixelWidth; y++)
                 for (int x = 0; x < screenVPixelWidth; x++)
                 {
-                    brush.Color = Color.FromArgb(newFrame[x, y].R, newFrame[x, y].G, newFrame[x, y].B);
-                    graphics.FillRectangle(brush, vPixelWidth * x, vPixelWidth * y, vPixelWidth, vPixelWidth);
+                    if (newFrame[x, y] != frameBuffer[x, y])
+                    {
+                        brush.Color = Color.FromArgb(newFrame[x, y].R, newFrame[x, y].G, newFrame[x, y].B);
+                        graphics.FillRectangle(brush, vPixelWidth * x, vPixelWidth * y, vPixelWidth, vPixelWidth);
+                    }
                 }
 
             brush.Dispose();
+            frameBuffer = newFrame;
             return true;
         }
 
