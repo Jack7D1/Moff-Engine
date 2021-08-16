@@ -21,7 +21,7 @@ namespace MoffEngine.Engine
         //Width of vPixel in screen pixels
         private const int vPixelWidth = screenPixelWidth / GameProc.desiredvPixelRes;
 
-        private static VPixel[,] frameBuffer = new VPixel[screenVPixelWidth, screenVPixelWidth];
+        private static readonly VPixel[,] currentFrame = new VPixel[screenVPixelWidth, screenVPixelWidth];
         private static Graphics graphics;
         private readonly Timer runTimer;
 
@@ -38,26 +38,19 @@ namespace MoffEngine.Engine
 
             //Initialize systems
             graphics = CreateGraphics();
-            for (int y = 0; y < screenVPixelWidth; y++)
-                for (int x = 0; x < screenVPixelWidth; x++)
-                    frameBuffer[x, y] = new VPixel();
             mousevPixelCoords = new Point();
             mouseButtonState = new MouseButtonState(false, false);
             runTimer = new Timer();
             runTimer.Tick += new EventHandler(RunTick);
-
+            for (int y = 0; y < screenVPixelWidth; y++)
+                for (int x = 0; x < screenVPixelWidth; x++)
+                    currentFrame[x, y] = new VPixel();
             //Start Engine
             if (GameProc.desiredTPS > 0)
             {
-                
-                runTimer.Interval = 1000 / GameProc.desiredTPS;
-                
+                Tick = -1;
             }
-            else
-            {
-                runTimer.Interval = 1;
-               Tick = -1;
-            }
+            runTimer.Interval = 1;
             runTimer.Start();
         }
 
@@ -74,15 +67,15 @@ namespace MoffEngine.Engine
             for (int y = 0; y < screenVPixelWidth; y++)
                 for (int x = 0; x < screenVPixelWidth; x++)
                 {
-                    if (newFrame[x, y] != frameBuffer[x, y])
+                    if (!newFrame[x, y].IsIdentical(currentFrame[x, y]))
                     {
                         brush.Color = Color.FromArgb(newFrame[x, y].R, newFrame[x, y].G, newFrame[x, y].B);
                         graphics.FillRectangle(brush, vPixelWidth * x, vPixelWidth * y, vPixelWidth, vPixelWidth);
+                        currentFrame[x, y] = new VPixel(newFrame[x, y]);
                     }
                 }
 
             brush.Dispose();
-            frameBuffer = newFrame;
             return true;
         }
 
@@ -140,6 +133,10 @@ namespace MoffEngine.Engine
                     runTimer.Dispose();
                     return;
                 }
+                else
+                {
+                    runTimer.Interval = 1000 / GameProc.desiredTPS;
+                }
             }
             else
             {
@@ -174,11 +171,24 @@ namespace MoffEngine.Engine
                 SetColor(color);
             }
 
+            public VPixel(VPixel vPixel)
+            {
+                SetRGB(vPixel.R, vPixel.G, vPixel.B);
+            }
+
             public void GetRGB(out byte redVal, out byte grnVal, out byte bluVal)
             {
                 redVal = R;
                 grnVal = G;
                 bluVal = B;
+            }
+
+            public bool IsIdentical(VPixel compare)
+            {
+                if (compare != null && compare.R == R && compare.G == G && compare.B == B)
+                    return true;
+                else
+                    return false;
             }
 
             public void SetColor(Color newcolor)
