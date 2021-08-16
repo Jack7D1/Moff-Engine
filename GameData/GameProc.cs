@@ -6,13 +6,13 @@ namespace MoffEngine
 {
     internal static class GameProc
     {
-        public const int desiredvPixelRes = 16;
+        public const int desiredvPixelRes = 32;
 
         public const string desiredWindowName = "Moth Paint";
 
         public static readonly Color desiredBGColor = Color.Black;
 
-        public static readonly int desiredTPS = 24;
+        public static readonly int desiredTPS = 4;
 
         private static readonly List<Color> colors = new List<Color> { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet, Color.White };
 
