@@ -46,7 +46,7 @@ namespace MoffEngine.Engine
                 for (int x = 0; x < screenVPixelWidth; x++)
                     currentFrame[x, y] = new VPixel();
             //Start Engine
-            if (GameProc.desiredTPS > 0)
+            if (GameProc.desiredTPS <= 0)
             {
                 Tick = -1;
             }
